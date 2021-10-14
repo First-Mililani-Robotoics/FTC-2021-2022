@@ -106,7 +106,7 @@ public class robotDeclarations
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         carouselWheel.setDirection(DcMotor.Direction.REVERSE);
-        intakeWheel.setDirection(DcMotor.Direction.FORWARD);
+        intakeWheel.setDirection(DcMotor.Direction.REVERSE);
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
