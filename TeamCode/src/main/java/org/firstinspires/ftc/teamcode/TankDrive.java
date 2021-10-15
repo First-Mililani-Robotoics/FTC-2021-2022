@@ -73,14 +73,14 @@ public class TankDrive extends OpMode {
       robot.duckMotor.setPower(0);
 
 
-     if (intake == 1) {
-        robot.freightMotor.setPower(1);
+     if (intake >= 0.5) {
+        robot.freightMotor.setPower(-1);
      } else {
         robot.freightMotor.setPower(0);
      }
 
-      if (scoreFreight == 1) {
-         robot.freightMotor.setPower(-1);
+      if (scoreFreight >= 0.5) {
+         robot.freightMotor.setPower(1);
       } else {
          robot.freightMotor.setPower(0);
       }
@@ -97,7 +97,11 @@ public class TankDrive extends OpMode {
          robot.pivotMotor.setPower(0);
       }
 
-
+       if (spinCarousel == true) {
+           robot.duckMotor.setPower(-1);
+       } else {
+           robot.duckMotor.setPower(0);
+       }
 
 
       // Move both servos to new position.  Assume servos are mirror image of each other.

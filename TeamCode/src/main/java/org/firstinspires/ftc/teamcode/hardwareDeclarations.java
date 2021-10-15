@@ -44,7 +44,7 @@ public class hardwareDeclarations
    /* Initialize standard Hardware interfaces */
    public void init(HardwareMap ahwMap) {
       // Save reference to Hardware map
-
+      hwMap = ahwMap;
       leftFrontDrive = hwMap.get(DcMotor.class, "left_front_drive");
       rightFrontDrive = hwMap.get(DcMotor.class, "right_front_drive");
       leftBackDrive = hwMap.get(DcMotor.class, "left_back_drive");
