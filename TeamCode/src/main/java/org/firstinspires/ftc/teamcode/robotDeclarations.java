@@ -100,12 +100,12 @@ public class robotDeclarations
         rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        carouselWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        carouselWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Set the direction of the right motors to reverse
         // so that all motors spin in the same direction.
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        carouselWheel.setDirection(DcMotor.Direction.FORWARD);
+        carouselWheel.setDirection(DcMotor.Direction.REVERSE);
         intakeWheel.setDirection(DcMotor.Direction.REVERSE);
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
