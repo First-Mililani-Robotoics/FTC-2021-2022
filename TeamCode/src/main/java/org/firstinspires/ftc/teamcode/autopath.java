@@ -12,21 +12,18 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 public class autopath extends LinearOpMode {
 
 
-
-
-
         //Declaring OpMode members
 
         hardwareDeclarations robot = new hardwareDeclarations();
         private ElapsedTime runtime = new ElapsedTime();
 
         //Constants
-        final double COUNTS_PER_MOTOR_REV = 1440; //Counts to rotations, testing later
+        final double COUNTS_PER_MOTOR_REV = 1120; //Counts to rotations, testing later
         final double DRIVE_GEAR_REDUCTION = 1.0; //If gears are added
         final double WHEEL_DIAMETER_INCHES = 4.0; //Wheel size
         final double CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER_INCHES; //Circumference of wheel
         final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / CIRCUMFERENCE; //Converting counts to inches
-        final double ROBOT_RADIUS = 12940148309520593.003;
+        final double ROBOT_RADIUS = 12940148309520593.003; //change value later on
 
         static final double     DRIVE_SPEED             = 1; //new settings for speed?
         static final double     TURN_SPEED              = 1;
@@ -45,19 +42,40 @@ public class autopath extends LinearOpMode {
            robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
            robot.duckMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-           telemetry.addData("Path0",  "Starting at %7d :%7d",
-                   robot.leftFrontDrive.getCurrentPosition(),
-                   robot.rightFrontDrive.getCurrentPosition());
-           telemetry.update();
+               telemetry.addData("Path0",  "Starting at %7d :%7d :%7d :%7d",
 
+                       robot.leftBackDrive.getCurrentPosition(),
+                       robot.leftFrontDrive.getCurrentPosition(),
+                       robot.rightBackDrive.getCurrentPosition(),
+                       robot.rightFrontDrive.getCurrentPosition());
+
+               telemetry.update();
+
+               waitForStart();
+
+        encoderDrive(-1, 12, 12,2); //reset very measurement present, they're probably inaccurate-peko
+        //move backwards to carousel
+
+        while(runtime.seconds() < 10) {
+        robot.duckMotor.setPower(0.7);
         }
+        //spin carousel with duckMotor
+
+        turnDrive(1, 90,2);
+        //turns right and faces west wall (refer to final path)
+
+        encoderDrive(1, 12, 12, 2);
+        //move towards west wall
+
+        turnDrive(1, 90, 2);
+        //turns right and faces north wall
+
+        encoderDrive(1, 108, 108,10);
+        //robot moves forward and completely enters warehouse
+
+    }
 
 
-
-
-        //taking motors from hardwareDeclarations and creating new objects?
-
-        hardwareDeclarations leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive, freightMotor, duckMotor, pivotMotor = new hardwareDeclarations();
 
         public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS){
             int newLeftTarget;
@@ -67,6 +85,23 @@ public class autopath extends LinearOpMode {
             newLeftTarget = (int)(leftInches * COUNTS_PER_INCH);
             newRightTarget = (int)(rightInches * COUNTS_PER_INCH);
 
+            robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            robot.leftBackDrive.setTargetPosition(newLeftTarget);
+            robot.leftFrontDrive.setTargetPosition(newLeftTarget);
+            robot.rightFrontDrive.setTargetPosition(newRightTarget);
+            robot.rightBackDrive.setTargetPosition(newRightTarget);
+
+            robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            runtime.reset();
+
             robot.leftFrontDrive.setPower(leftPower);
             robot.leftBackDrive.setPower(leftPower);
             robot.rightFrontDrive.setPower(rightPower);
@@ -75,12 +110,23 @@ public class autopath extends LinearOpMode {
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) && robot.leftBackDrive.isBusy() || robot.leftFrontDrive.isBusy() || robot.rightFrontDrive.isBusy() || robot.rightBackDrive.isBusy()) {
 
+                telemetry.addData("robotCurrentPosition", "Running at %7d :%7d :%7d :%7d",
+                        robot.leftBackDrive.getCurrentPosition(),
+                        robot.leftFrontDrive.getCurrentPosition(),
+                        robot.rightBackDrive.getCurrentPosition(),
+                        robot.rightFrontDrive.getCurrentPosition());
+
             }
 
             robot.leftFrontDrive.setPower(0);
             robot.leftBackDrive.setPower(0);
             robot.rightFrontDrive.setPower(0);
             robot.rightBackDrive.setPower(0);
+
+            robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
 }
@@ -89,10 +135,27 @@ public class autopath extends LinearOpMode {
         int newRightTarget;
         double rightPower = speed;
         double leftPower = speed;
-        double degreeInches = (degrees * (Math.PI / 180) * ROBOT_RADIUS);
+        double degreeToInches = (degrees * (Math.PI / 180) * ROBOT_RADIUS);
 
-        newLeftTarget = (int)(degreeInches * COUNTS_PER_INCH);
-        newRightTarget = (int)(degreeInches * COUNTS_PER_INCH);
+        newLeftTarget = (int)(degreeToInches * COUNTS_PER_INCH);
+        newRightTarget = (int)(degreeToInches * COUNTS_PER_INCH);
+
+        robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.leftBackDrive.setTargetPosition(newLeftTarget);
+        robot.leftFrontDrive.setTargetPosition(newLeftTarget);
+        robot.rightFrontDrive.setTargetPosition(newRightTarget);
+        robot.rightBackDrive.setTargetPosition(newRightTarget);
+
+        robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+         runtime.reset();
 
         robot.leftFrontDrive.setPower(leftPower);
         robot.leftBackDrive.setPower(leftPower);
