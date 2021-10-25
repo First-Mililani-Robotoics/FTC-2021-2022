@@ -130,15 +130,34 @@ public class autopath extends LinearOpMode {
 
 
 }
+
     public void turnDrive(double speed, double degrees, double timeoutS){
+
         int newLeftTarget;
         int newRightTarget;
         double rightPower = speed;
         double leftPower = speed;
-        double degreeToInches = (degrees * (Math.PI / 180) * ROBOT_RADIUS);
+        double degreesToInches = (degrees * (Math.PI / 180) * ROBOT_RADIUS);
 
-        newLeftTarget = (int)(degreeToInches * COUNTS_PER_INCH);
-        newRightTarget = (int)(degreeToInches * COUNTS_PER_INCH);
+        if (degrees > 0) {
+        //if we're turning right (a positive amount of degrees)...
+
+            newLeftTarget = (int)(degreesToInches * COUNTS_PER_INCH);
+            newRightTarget = -(int)(degreesToInches * COUNTS_PER_INCH);
+
+             rightPower = -speed;
+             leftPower = speed;
+
+        } else {
+        //if we're turning left (a negative amount of degrees)...
+
+            newLeftTarget = -(int)(degreesToInches * COUNTS_PER_INCH);
+            newRightTarget = (int)(degreesToInches * COUNTS_PER_INCH);
+
+             rightPower = speed;
+             leftPower = -speed;
+        }
+
 
         robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -163,7 +182,11 @@ public class autopath extends LinearOpMode {
         robot.rightBackDrive.setPower(rightPower);
 
         while (opModeIsActive() &&
-                (runtime.seconds() < timeoutS) && (robot.leftBackDrive.isBusy() || robot.leftFrontDrive.isBusy() || robot.rightFrontDrive.isBusy() || robot.rightBackDrive.isBusy()))
+                (runtime.seconds() < timeoutS) &&
+                (robot.leftBackDrive.isBusy() ||
+                robot.leftFrontDrive.isBusy() ||
+                robot.rightFrontDrive.isBusy() ||
+                robot.rightBackDrive.isBusy()))
         {
 
 
