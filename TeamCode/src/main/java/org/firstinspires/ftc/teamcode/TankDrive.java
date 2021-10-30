@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 
@@ -54,6 +55,7 @@ public class TankDrive extends OpMode {
       boolean payloadUp;
       boolean payloadDown;
       boolean spinCarousel;
+      boolean slowMode;
 
       // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
       left = -gamepad1.left_stick_y;
@@ -63,6 +65,7 @@ public class TankDrive extends OpMode {
       payloadUp = gamepad1.left_bumper;
       payloadDown = gamepad1.right_bumper;
       spinCarousel = gamepad1.b;
+      slowMode = gamepad1.x;
 
       robot.leftFrontDrive.setPower(left);
       robot.leftBackDrive.setPower(left);
@@ -101,6 +104,15 @@ public class TankDrive extends OpMode {
            robot.duckMotor.setPower(-1);
        } else {
            robot.duckMotor.setPower(0);
+       }
+
+       if (slowMode == true) {
+           robot.leftFrontDrive.setPower(0.5);
+           robot.rightFrontDrive.setPower(0.5);
+           robot.leftBackDrive.setPower(0.5);
+           robot.rightBackDrive.setPower(0.5);
+
+
        }
 
 

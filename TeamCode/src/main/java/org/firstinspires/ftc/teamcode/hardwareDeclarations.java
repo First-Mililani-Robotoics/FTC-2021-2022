@@ -78,10 +78,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
         freightMotor.setPower(0);
         duckMotor.setPower(0);
         pivotMotor.setPower(0);
-
-
-
-
     }
 
 
