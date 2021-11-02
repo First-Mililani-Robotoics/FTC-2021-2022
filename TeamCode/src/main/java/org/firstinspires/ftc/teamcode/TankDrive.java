@@ -98,7 +98,6 @@ public class TankDrive extends OpMode{
         final int carouselRPM = 47; //Max RMP of the carousel before the duck falls off
         final int carouselWheelRPM = 185; //Max RPM of the carousel wheel before it's too fast
         final double optimalTicksPerSecond = 1657.6; //the RPM of the motor in ticks per second
-        double curentTicksPerSecond =
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         left = gamepad1.left_stick_y;
@@ -150,23 +149,33 @@ public class TankDrive extends OpMode{
         //test duck code for kikugawa strategy
         double carouselWheelCurrentTicks = 0;
         double carouselWheelTPS; //TPS = ticks per second
+        double motorPower = 0.725;
+        double optimalTPSPlusPosition; // the optimal TPS plus the carousel motors current position
 
         if(leftTriggerGamepad2 >= 0.5) {
-            robot.carouselWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.carouselWheel.setPower(0.725);
-            while(timer.seconds() <= 0.1) {
+            robot.carouselWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.carouselWheel.setPower(motorPower);
+            while(timer.seconds() <= 0.2) {
                 carouselWheelCurrentTicks = robot.carouselWheel.getCurrentPosition();
             }
 
-            carouselWheelTPS = carouselWheelCurrentTicks * 10;
+            optimalTPSPlusPosition = optimalTicksPerSecond + carouselWheelCurrentTicks;
+            carouselWheelTPS = carouselWheelCurrentTicks * 5;
 
-            if(carouselWheelTPS < optimalTicksPerSecond) {
-
+            if(carouselWheelTPS < optimalTPSPlusPosition) {
+                motorPower += 0.05;
+                robot.carouselWheel.setPower(motorPower);
+            }
+            else {
+                motorPower -= 0.01;
+                robot.carouselWheel.setPower(motorPower);
             }
         }
         else {
             robot.carouselWheel.setPower(0);
         }
+
+        telemetry.addData("ticks of motor", "%.2f", robot.carouselWheel);
 
 
 
