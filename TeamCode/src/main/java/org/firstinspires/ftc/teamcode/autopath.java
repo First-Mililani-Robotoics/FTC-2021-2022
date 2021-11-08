@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 @Autonomous(name="Auto", group="Pushbot")
 public class autopath extends LinearOpMode {
@@ -20,60 +19,66 @@ public class autopath extends LinearOpMode {
         //Constants
         final double COUNTS_PER_MOTOR_REV = 1120; //Counts to rotations, testing later
         final double DRIVE_GEAR_REDUCTION = 1.0; //If gears are added
-        final double WHEEL_DIAMETER_INCHES = 4.0; //Wheel size
+        final double WHEEL_DIAMETER_INCHES = 2.0; //Wheel size
         final double CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER_INCHES; //Circumference of wheel
         final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / CIRCUMFERENCE; //Converting counts to inches
         final double ROBOT_RADIUS = 12940148309520593.003; //change value later on
 
+        final double DUCK_WHEEL_DIAMETER = 2.0;
+        final double CAROUSEL_DIAMETER = 15.0;
+
+        final double carouselCircumference = CAROUSEL_DIAMETER * Math.PI;
+        final double wheelCircumference = DUCK_WHEEL_DIAMETER * Math.PI;
+
+        final double duckRotations = carouselCircumference/wheelCircumference;
+
         static final double     DRIVE_SPEED             = 1; //new settings for speed?
         static final double     TURN_SPEED              = 1;
 
-    @Override //change method name?
-       public void runOpMode() {
+        @Override
+        public void runOpMode() {
 
-           robot.init(hardwareMap);
+               robot.init(hardwareMap);
 
-           telemetry.addData("Status", "Resetting Encoders");
-           telemetry.update();
-
-           robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-           robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-           robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-           robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-           robot.duckMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-               telemetry.addData("Path0",  "Starting at %7d :%7d :%7d :%7d",
-
-                       robot.leftBackDrive.getCurrentPosition(),
-                       robot.leftFrontDrive.getCurrentPosition(),
-                       robot.rightBackDrive.getCurrentPosition(),
-                       robot.rightFrontDrive.getCurrentPosition());
-
+               telemetry.addData("Status", "Resetting Encoders");
                telemetry.update();
 
-               waitForStart();
+               robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+               robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+               robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+               robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+               robot.duckMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        encoderDrive(-1, 12, 12,2); //reset very measurement present, they're probably inaccurate-peko
-        //move backwards to carousel
+                   telemetry.addData("Path0",  "Starting at %7d :%7d :%7d :%7d",
 
-        while(runtime.seconds() < 10) {
-        robot.duckMotor.setPower(0.7);
+                           robot.leftBackDrive.getCurrentPosition(),
+                           robot.leftFrontDrive.getCurrentPosition(),
+                           robot.rightBackDrive.getCurrentPosition(),
+                           robot.rightFrontDrive.getCurrentPosition());
+
+                   telemetry.update();
+
+                   waitForStart();
+
+            encoderDrive(-1, 12, 12,2); //reset very measurement present, they're probably inaccurate-peko
+            //move backwards to carousel
+
+            duckDrive(0.7, duckRotations, 10);
+            //spin carousel with duckMotor
+
+            turnDrive(1, 90,2);
+            //turns right and faces west wall (refer to final path)
+
+            encoderDrive(1, 12, 12, 2);
+            //move towards west wall
+
+            turnDrive(1, 90, 2);
+            //turns right and faces north wall
+
+            encoderDrive(1, 108, 108,10);
+            //robot moves forward and completely enters warehouse
+
         }
-        //spin carousel with duckMotor
-
-        turnDrive(1, 90,2);
-        //turns right and faces west wall (refer to final path)
-
-        encoderDrive(1, 12, 12, 2);
-        //move towards west wall
-
-        turnDrive(1, 90, 2);
-        //turns right and faces north wall
-
-        encoderDrive(1, 108, 108,10);
-        //robot moves forward and completely enters warehouse
-
-    }
 
 
 
@@ -130,6 +135,32 @@ public class autopath extends LinearOpMode {
 
 
 }
+    public void duckDrive(double speed, double rotations, double timeoutS) {
+
+        int newRotationsTarget;
+        double duckSpeed = speed;
+        newRotationsTarget = (int)(rotations * COUNTS_PER_MOTOR_REV);
+
+        robot.duckMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.duckMotor.setTargetPosition(newRotationsTarget);
+
+        robot.duckMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        runtime.reset();
+
+        robot.duckMotor.setPower(duckSpeed);
+
+        while (opModeIsActive() &&
+                (runtime.seconds() < timeoutS) && robot.duckMotor.isBusy()) {
+
+        }
+
+        robot.duckMotor.setPower(0);
+
+        robot.duckMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
 
     public void turnDrive(double speed, double degrees, double timeoutS){
 

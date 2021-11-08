@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode;
-
+    //Drugs = cure depression
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
