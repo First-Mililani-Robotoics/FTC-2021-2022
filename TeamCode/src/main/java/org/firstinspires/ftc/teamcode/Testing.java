@@ -1,218 +1,138 @@
 package org.firstinspires.ftc.teamcode;
-    //Drugs = cure depression
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
-
-@Autonomous(name="Auto", group="Pushbot")
-public class Testing extends LinearOpMode {
+import com.qualcomm.robotcore.util.Range;
 
 
-    //Declaring OpMode members
 
-    hardwareDeclarations robot = new hardwareDeclarations();
-    private ElapsedTime runtime = new ElapsedTime();
+@TeleOp(name="Tank Drive", group="Pushbot")
 
-    //Constants
-    final double COUNTS_PER_MOTOR_REV = 1120; //Counts to rotations, testing later
-    final double DRIVE_GEAR_REDUCTION = 1.0; //If gears are added
-    final double WHEEL_DIAMETER_INCHES = 4.0; //Wheel size
-    final double CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER_INCHES; //Circumference of wheel
-    final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / CIRCUMFERENCE; //Converting counts to inches
-    final double ROBOT_RADIUS = 12940148309520593.003; //change value later on
+public class Testing extends OpMode {
 
-    static final double DRIVE_SPEED = 1; //new settings for speed?
-    static final double TURN_SPEED = 1;
+    /* Declare OpMode members. */
+    hardwareDeclarations robot       = new hardwareDeclarations(); // use the class created to define a Pushbot's hardware
 
-    @Override //change method name?
-    public void runOpMode() {
 
+    /*
+     * Code to run ONCE when the driver hits INIT
+     */
+    @Override
+    public void init() {
+        /* Initialize the hardware variables.
+         * The init() method of the hardware class does all the work here
+         */
         robot.init(hardwareMap);
 
-        telemetry.addData("Status", "Resetting Encoders");
-        telemetry.update();
+        // Send telemetry message to signify robot waiting;
+        telemetry.addData("Say", "Hello Driver");
+    }
 
-        robot.duckMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        telemetry.addData("Duck", "Starting at %7d");
-        telemetry.update();
-        waitForStart();
-        while(runtime.seconds() < 10) {
-            robot.duckMotor.setPower(0.7);
+    /*
+     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
+     */
+    @Override
+    public void init_loop() {
+    }
+
+    /*
+     * Code to run ONCE when the driver hits PLAY
+     */
+    @Override
+    public void start() {
+    }
+
+    /*
+     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
+     */
+    @Override
+    public void loop() {
+        double left;
+        double right;
+        /*float intake;
+        float scoreFreight;
+        boolean payloadUp;
+        boolean payloadDown;
+        boolean spinCarousel;
+        boolean slowMode;
+*/
+        // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
+        left = -gamepad1.left_stick_y;
+        right = -gamepad1.right_stick_y;
+        /*
+        intake = gamepad1.left_trigger;
+        scoreFreight = gamepad1.right_trigger;
+        payloadUp = gamepad1.left_bumper;
+        payloadDown = gamepad1.right_bumper;
+        spinCarousel = gamepad1.b;
+        slowMode = gamepad1.x;
+
+         */
+
+        robot.leftFrontDrive.setPower(left);
+        robot.leftBackDrive.setPower(left);
+        robot.rightFrontDrive.setPower(right);
+        robot.rightBackDrive.setPower(right);
+        // Power is from 0 to 1; this is saying that the duck motor will always be on.
+        // Is that what you want?
+        //robot.duckMotor.setPower(0);
+/*
+
+        if (intake >= 0.5) {
+            robot.freightMotor.setPower(-1);
+        } else {
+            robot.freightMotor.setPower(0);
         }
-        //spin carousel with duckMotor
+
+        if (scoreFreight >= 0.5) {
+            robot.freightMotor.setPower(1);
+        } else {
+            robot.freightMotor.setPower(0);
+        }
+
+        if (payloadUp == true) {
+            robot.pivotMotor.setPower(1);
+        } else {
+            robot.pivotMotor.setPower(0);
+        }
+
+        if (payloadDown == true) {
+            robot.pivotMotor.setPower(-1);
+        } else {
+            robot.pivotMotor.setPower(0);
+        }
+
+        if (spinCarousel == true) {
+            robot.duckMotor.setPower(-1);
+        } else {
+            robot.duckMotor.setPower(0);
+        }
+
+        if (slowMode == true) {
+            robot.leftFrontDrive.setPower(0.5);
+            robot.rightFrontDrive.setPower(0.5);
+            robot.leftBackDrive.setPower(0.5);
+            robot.rightBackDrive.setPower(0.5);
 
 
+        }
+*/
+
+        // Move both servos to new position.  Assume servos are mirror image of each other.
+
+
+
+
+        // Send telemetry message to signify robot running;
+        telemetry.addData("left",  "%.2f", left);
+        telemetry.addData("right", "%.2f", right);
+    }
+
+    /*
+     * Code to run ONCE after the driver hits STOP
+     */
+    @Override
+    public void stop() {
     }
 }
-/*
-        robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-
-        telemetry.addData("Path0",  "Starting at %7d :%7d :%7d :%7d",
-
-                robot.leftBackDrive.getCurrentPosition(),
-                robot.leftFrontDrive.getCurrentPosition(),
-                robot.rightBackDrive.getCurrentPosition(),
-                robot.rightFrontDrive.getCurrentPosition());
-
-
-
-        encoderDrive(-1, 12, 12,2); //reset very measurement present, they're probably inaccurate-peko
-        //move backwards to carousel
-
-
-
-        turnDrive(1, 90,2);
-        //turns right and faces west wall (refer to final path)
-
-        encoderDrive(1, 12, 12, 2);
-        //move towards west wall
-
-        turnDrive(1, 90, 2);
-        //turns right and faces north wall
-
-        encoderDrive(1, 108, 108,10);
-        //robot moves forward and completely enters warehouse
-
-    }
-
-
-
-    public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS){
-        int newLeftTarget;
-        int newRightTarget;
-        double rightPower = speed;
-        double leftPower = speed;
-        newLeftTarget = (int)(leftInches * COUNTS_PER_INCH);
-        newRightTarget = (int)(rightInches * COUNTS_PER_INCH);
-
-        robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        robot.leftBackDrive.setTargetPosition(newLeftTarget);
-        robot.leftFrontDrive.setTargetPosition(newLeftTarget);
-        robot.rightFrontDrive.setTargetPosition(newRightTarget);
-        robot.rightBackDrive.setTargetPosition(newRightTarget);
-
-        robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        runtime.reset();
-
-        robot.leftFrontDrive.setPower(leftPower);
-        robot.leftBackDrive.setPower(leftPower);
-        robot.rightFrontDrive.setPower(rightPower);
-        robot.rightBackDrive.setPower(rightPower);
-
-        while (opModeIsActive() &&
-                (runtime.seconds() < timeoutS) && robot.leftBackDrive.isBusy() || robot.leftFrontDrive.isBusy() || robot.rightFrontDrive.isBusy() || robot.rightBackDrive.isBusy()) {
-
-            telemetry.addData("robotCurrentPosition", "Running at %7d :%7d :%7d :%7d",
-                    robot.leftBackDrive.getCurrentPosition(),
-                    robot.leftFrontDrive.getCurrentPosition(),
-                    robot.rightBackDrive.getCurrentPosition(),
-                    robot.rightFrontDrive.getCurrentPosition());
-
-        }
-
-        robot.leftFrontDrive.setPower(0);
-        robot.leftBackDrive.setPower(0);
-        robot.rightFrontDrive.setPower(0);
-        robot.rightBackDrive.setPower(0);
-
-        robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
-    }
-
-    public void turnDrive(double speed, double degrees, double timeoutS){
-
-        int newLeftTarget;
-        int newRightTarget;
-        double rightPower = speed;
-        double leftPower = speed;
-        double degreesToInches = (degrees * (Math.PI / 180) * ROBOT_RADIUS);
-
-        if (degrees > 0) {
-            //if we're turning right (a positive amount of degrees)...
-
-            newLeftTarget = (int)(degreesToInches * COUNTS_PER_INCH);
-            newRightTarget = -(int)(degreesToInches * COUNTS_PER_INCH);
-
-            rightPower = -speed;
-            leftPower = speed;
-
-        } else {
-            //if we're turning left (a negative amount of degrees)...
-
-            newLeftTarget = -(int)(degreesToInches * COUNTS_PER_INCH);
-            newRightTarget = (int)(degreesToInches * COUNTS_PER_INCH);
-
-            rightPower = speed;
-            leftPower = -speed;
-        }
-
-
-        robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        robot.leftBackDrive.setTargetPosition(newLeftTarget);
-        robot.leftFrontDrive.setTargetPosition(newLeftTarget);
-        robot.rightFrontDrive.setTargetPosition(newRightTarget);
-        robot.rightBackDrive.setTargetPosition(newRightTarget);
-
-        robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        runtime.reset();
-
-        robot.leftFrontDrive.setPower(leftPower);
-        robot.leftBackDrive.setPower(leftPower);
-        robot.rightFrontDrive.setPower(rightPower);
-        robot.rightBackDrive.setPower(rightPower);
-
-        while (opModeIsActive() &&
-                (runtime.seconds() < timeoutS) &&
-                (robot.leftBackDrive.isBusy() ||
-                        robot.leftFrontDrive.isBusy() ||
-                        robot.rightFrontDrive.isBusy() ||
-                        robot.rightBackDrive.isBusy()))
-        {
-
-
-            telemetry.addData("robotCurrentPosition", "Running at %7d :%7d :%7d :%7d",
-                    robot.leftBackDrive.getCurrentPosition(),
-                    robot.leftFrontDrive.getCurrentPosition(),
-                    robot.rightBackDrive.getCurrentPosition(),
-                    robot.rightFrontDrive.getCurrentPosition());
-
-        }
-
-        robot.leftFrontDrive.setPower(0);
-        robot.leftBackDrive.setPower(0);
-        robot.rightFrontDrive.setPower(0);
-        robot.rightBackDrive.setPower(0);
-
-        robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
- */

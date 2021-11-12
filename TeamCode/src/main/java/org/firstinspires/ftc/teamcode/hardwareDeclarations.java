@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public void hardwareDeclarations(){
+    public hardwareDeclarations(){
     }
 
     /* Initialize standard Hardware interfaces */
@@ -47,10 +47,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
         //Save reference to Hardware map
         hwMap = ahwMap;
 
-        leftFrontDrive = hwMap.get(DcMotor.class, "left_front_drive");
-        rightFrontDrive = hwMap.get(DcMotor.class, "right_front_drive");
-        leftBackDrive = hwMap.get(DcMotor.class, "left_back_drive");
-        rightBackDrive = hwMap.get(DcMotor.class, "right_back_drive");
+        leftFrontDrive = hwMap.get(DcMotor.class, "left_front");
+        rightFrontDrive = hwMap.get(DcMotor.class, "right_front");
+        leftBackDrive = hwMap.get(DcMotor.class, "left_back");
+        rightBackDrive = hwMap.get(DcMotor.class, "right_back");
         freightMotor = hwMap.get(DcMotor.class, "freight_motor");
         duckMotor = hwMap.get(DcMotor.class, "duck_motor");
         pivotMotor = hwMap.get(DcMotor.class, "pivot_motor");

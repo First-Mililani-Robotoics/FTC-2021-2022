@@ -60,6 +60,12 @@ public class TankDrive extends OpMode {
       // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
       left = -gamepad1.left_stick_y;
       right = -gamepad1.right_stick_y;
+
+      robot.leftFrontDrive.setPower(-gamepad1.left_stick_y);
+      robot.leftBackDrive.setPower(-gamepad1.left_stick_y);
+      robot.rightFrontDrive.setPower(-gamepad1.right_stick_y);
+      robot.rightBackDrive.setPower(-gamepad1.right_stick_y);
+
       intake = gamepad1.left_trigger;
       scoreFreight = gamepad1.right_trigger;
       payloadUp = gamepad1.left_bumper;
@@ -67,12 +73,6 @@ public class TankDrive extends OpMode {
       spinCarousel = gamepad1.b;
       slowMode = gamepad1.x;
 
-      robot.leftFrontDrive.setPower(left);
-      robot.leftBackDrive.setPower(left);
-      robot.rightFrontDrive.setPower(right);
-      robot.rightBackDrive.setPower(right);
-      // Power is from 0 to 1; this is saying that the duck motor will always be on.
-      // Is that what you want?
       robot.duckMotor.setPower(0);
 
 
@@ -116,7 +116,6 @@ public class TankDrive extends OpMode {
        }
 
 
-      // Move both servos to new position.  Assume servos are mirror image of each other.
 
 
 
