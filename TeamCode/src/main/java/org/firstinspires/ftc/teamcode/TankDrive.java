@@ -55,23 +55,21 @@ public class TankDrive extends OpMode {
       boolean payloadUp;
       boolean payloadDown;
       boolean spinCarousel;
-      boolean slowMode;
+      float slowMode;
 
       // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
       left = -gamepad1.left_stick_y;
       right = -gamepad1.right_stick_y;
 
-      robot.leftFrontDrive.setPower(-gamepad1.left_stick_y);
-      robot.leftBackDrive.setPower(-gamepad1.left_stick_y);
-      robot.rightFrontDrive.setPower(-gamepad1.right_stick_y);
-      robot.rightBackDrive.setPower(-gamepad1.right_stick_y);
+      intake = gamepad2.right_trigger;
+      scoreFreight = gamepad2.left_trigger;
 
-      intake = gamepad1.left_trigger;
-      scoreFreight = gamepad1.right_trigger;
-      payloadUp = gamepad1.left_bumper;
-      payloadDown = gamepad1.right_bumper;
-      spinCarousel = gamepad1.b;
-      slowMode = gamepad1.x;
+      payloadUp = gamepad2.right_bumper;
+      payloadDown = gamepad2.left_bumper;
+
+      spinCarousel = gamepad2.b;
+
+      slowMode = gamepad1.right_trigger;
 
       robot.duckMotor.setPower(0);
 
@@ -83,7 +81,7 @@ public class TankDrive extends OpMode {
      }
 
       if (scoreFreight >= 0.5) {
-         robot.freightMotor.setPower(1);
+         robot.freightMotor.setPower(0.25);
       } else {
          robot.freightMotor.setPower(0);
       }
@@ -91,13 +89,13 @@ public class TankDrive extends OpMode {
       if (payloadUp == true) {
          robot.pivotMotor.setPower(1);
       } else {
-         robot.pivotMotor.setPower(0);
+         robot.pivotMotor.setPower(0.01);
       }
 
       if (payloadDown == true) {
-         robot.pivotMotor.setPower(-1);
+         robot.pivotMotor.setPower(-0.2);
       } else {
-         robot.pivotMotor.setPower(0);
+         robot.pivotMotor.setPower(0.01);
       }
 
        if (spinCarousel == true) {
@@ -106,18 +104,17 @@ public class TankDrive extends OpMode {
            robot.duckMotor.setPower(0);
        }
 
-       if (slowMode == true) {
-           robot.leftFrontDrive.setPower(0.5);
-           robot.rightFrontDrive.setPower(0.5);
-           robot.leftBackDrive.setPower(0.5);
-           robot.rightBackDrive.setPower(0.5);
-
-
+       if (slowMode >= 0.5) {
+           robot.leftFrontDrive.setPower(left/2);
+           robot.rightFrontDrive.setPower(right/2);
+           robot.leftBackDrive.setPower(left/2);
+           robot.rightBackDrive.setPower(right/2);
+       } else {
+           robot.leftFrontDrive.setPower(left);
+           robot.rightFrontDrive.setPower(right);
+           robot.leftBackDrive.setPower(left);
+           robot.rightBackDrive.setPower(right);
        }
-
-
-
-
 
 
       // Send telemetry message to signify robot running;

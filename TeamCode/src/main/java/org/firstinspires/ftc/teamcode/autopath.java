@@ -22,7 +22,7 @@ public class autopath extends LinearOpMode {
         final double WHEEL_DIAMETER_INCHES = 2.0; //Wheel size
         final double CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER_INCHES; //Circumference of wheel
         final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / CIRCUMFERENCE; //Converting counts to inches
-        final double ROBOT_RADIUS = 12940148309520593.003; //change value later on
+        final double ROBOT_RADIUS = 8.5; //change value later on
 
         final double DUCK_WHEEL_DIAMETER = 2.0;
         final double CAROUSEL_DIAMETER = 15.0;
